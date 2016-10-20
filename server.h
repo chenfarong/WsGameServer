@@ -36,23 +36,27 @@ void FreeSocketInformation(DWORD Index);
 
 
 #else
+typedef unsigned long       DWORD;
+typedef int                 BOOL;
+typedef unsigned char       BYTE;
+typedef unsigned short      WORD;
 
 typedef int XSOCKET;
+
+
 
 #endif
 
 int ServerInit();
-
 int ServerListen(std::string ipAddr, int port);
-
 int ServerStep();
-
 void ServerClean();
-
-//int RecvData(XSOCKET s,)
 int ServerCore();
-
 void OnShutdown();
+
+
+
+
 
 #endif // server_h__
 

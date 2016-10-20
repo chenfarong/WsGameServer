@@ -3,6 +3,8 @@
 #include "server.h"
 #include "mcs.h"
 
+#if defined(__WINDOWS__)
+
 // Global var
 DWORD TotalSockets = 0;
 LPSOCKET_INFORMATION SocketArray[FD_SETSIZE];
@@ -11,7 +13,7 @@ XSOCKET ListenSocket;
 u_long NonBlock = 1;
 timeval TimeOut = {0,200};
 
-#if defined(__WINDOWS__)
+
 
 
 BOOL CreateSocketInformation(SOCKET s)

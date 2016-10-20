@@ -1,6 +1,13 @@
 ﻿
 #include "mcs.h"
 
+#if defined(__WINDOWS__)
+#include <winsock2.h>
+#else
+#include <sys/socket.h>
+#endif
+
+
 std::map<XSOCKET, XMSGSET*> subscriber;
 
 void xmsg_set(XSOCKET s, uint16_t _mid)
