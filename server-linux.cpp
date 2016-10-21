@@ -156,6 +156,7 @@ int ServerListen(std::string ipAddr, int port)
 	serveraddr.sin_family = AF_INET;
 	//	char *local_addr = "192.168.199.8";
 	inet_aton(ipAddr.c_str(), &(serveraddr.sin_addr));
+	//inet_aton("192.168.50.67",&(serveraddr.sin_addr));
 	serveraddr.sin_port = htons(port);
 
 	bind(sockfd, (struct sockaddr *) &serveraddr, sizeof(serveraddr));

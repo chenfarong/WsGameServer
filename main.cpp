@@ -21,8 +21,15 @@
 //#include "SSOpcodes.h"
 //#include "command.h"
 
+#include <string>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 
 #define IDS_VERSION  "0.9.1 2016-10-20"
+
+
 
 #ifdef _MSC_VER
 
@@ -36,7 +43,7 @@
 *  1 - running
 *  2 - paused
 */
-int App_ServiceStatus = -1;
+
 
 
 
@@ -44,6 +51,8 @@ int App_ServiceStatus = -1;
 #include "PosixDaemon.h"
 #endif
 
+int App_ServiceStatus = -1;
+std::string myPidFile="/var/tmp/mcs";
 
 /// Print out the usage string for this program on the console.
 void usage(const char* prog)
@@ -71,16 +80,16 @@ void usage(const char* prog)
 #ifdef __WINDOWS__
 int proc_arg(int argc, const char* argv[])
 {
-	for (int i = 0; i < argc; i++) 
-	{
-		if (0 == strcmp(argv[i], "-v")) {
-			printf("version:%s\n",IDS_VERSION);
-			exit(0);
-		}
-	}
 
 	return 0;
 }
+#else
+
+int proc_arg(int argc, const char* argv[])
+{
+	return 0;
+}
+
 #endif
 
 
@@ -94,19 +103,15 @@ int main_server()
 		exit(0);
 	}
 
+	App_ServiceStatus=1;
 
 	//进入程序主循环
 	while (App_ServiceStatus != 0)
 	{
 
 		//这里没考虑Windows中的暂停和继续的问题
+		if(App_ServiceStatus==1) ServerStep();
 
-		ServerStep();
-		//		theWorld.MainLoop();
-		//		global_timer_pass.Step();
-		//		global_tick_delta = global_timer_pass.Interval();
-		//		GameAppUpdate(global_tick_delta);
-		//		GxSleep(200);
 	}
 
 	ServerClean();
@@ -118,12 +123,45 @@ int main_server()
 
 int main(int argc, const char* argv[])
 {
+	for (int i = 0; i < argc; i++)
+	{
+		if (0 == strcmp(argv[i], "-v")) {
+			printf("version:%s\n",IDS_VERSION);
+			exit(0);
+		}
+	}
 
 	proc_arg(argc, argv);
 
 #ifdef __WINDOWS__
 	ServiceMainProc(argc, argv);
 	return 0;
+#else
+
+	bool bDaemon=false;
+	for (int i = 0; i < argc; i++)
+	{
+		if (0 == strcmp(argv[i], "-d")) {
+			bDaemon=true;
+		}
+
+		if (0 == strcmp(argv[i], "-stop")) {
+			stopDaemon(myPidFile.c_str());
+			//detachDaemon();
+			exit(0);
+		}
+
+	}
+
+
+	if(bDaemon){
+		startDaemon(myPidFile.c_str());
+	}
+
+
+	//CreatePIDFile(myPidFile);
+	main_server();
+
 #endif
 
 //	main_server();
