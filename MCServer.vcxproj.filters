@@ -24,6 +24,9 @@
     <ClCompile Include="mcs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ServiceWin32.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="server.h">
@@ -31,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="mcs.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceWin32.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

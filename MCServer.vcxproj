@@ -145,10 +145,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="mcs.cpp" />
+    <ClCompile Include="ServiceWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="server.h" />
     <ClInclude Include="mcs.h" />
+    <ClInclude Include="ServiceWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

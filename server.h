@@ -13,6 +13,10 @@
 
 #define __WINDOWS__ 1
 
+#ifndef  WIN32
+#define  WIN32 1
+#endif
+
 //#include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>

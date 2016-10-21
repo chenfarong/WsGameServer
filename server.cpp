@@ -244,9 +244,9 @@ int ServerStep()
 					}
 					else {
 						xmsg_command(SocketInfo->Socket, SocketInfo->DataBuf.buf, (int)RecvBytes);
-						printf("%lu", SocketInfo->DataBuf.len);
+						//printf("%lu", SocketInfo->DataBuf.len);
 						//if(RecvBytes<DATA_BUFSIZE-1) SocketInfo->DataBuf.buf[RecvBytes]=0;
-						memset(SocketInfo->DataBuf.buf, 0, DATA_BUFSIZE); //不加这行 后面的脏数据还在
+						//memset(SocketInfo->DataBuf.buf, 0, DATA_BUFSIZE); //不加这行 后面的脏数据还在
 					}
 				}
 			}
