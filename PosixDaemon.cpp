@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "Config/Config.h"
+//#include "Config/Config.h"
 #include "PosixDaemon.h"
 
 #include <cstdio>
@@ -25,8 +25,18 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <signal.h>
+
+#include <fcntl.h>
+#include <errno.h>
+#include <string.h>
+#include <string>
+
+
+void create_pid_file(const char *path);
 
 pid_t parent_pid = 0, sid = 0;
+
 
 void daemonSignal(int s)
 {
@@ -50,7 +60,7 @@ void daemonSignal(int s)
 }
 
 
-void startDaemon(uint32_t timeout)
+void startDaemon(const char* pidFname)
 {
     parent_pid = getpid();
     pid_t pid;
@@ -67,12 +77,15 @@ void startDaemon(uint32_t timeout)
         exit(EXIT_FAILURE);
     }
 
+/*
     if (pid > 0)
     {
         alarm(timeout);
         pause();
         exit(EXIT_FAILURE);
     }
+*/
+
 
     umask(0);
 
@@ -91,19 +104,24 @@ void startDaemon(uint32_t timeout)
     freopen("/dev/null", "rt", stdin);
     freopen("/dev/null", "wt", stdout);
     freopen("/dev/null", "wt", stderr);
+
+
+//	CreatePIDFile("/var/tmp/mcs");
+	create_pid_file(pidFname);
+
 }
 
-void stopDaemon()
+void stopDaemon(const char* pidFname)
 {
-    std::string pidfile = sConfig.GetStringDefault("PidFile", "");
-    if (!pidfile.empty())
+//    std::string pidfile;// = sConfig.GetStringDefault("PidFile", "");
+    if (pidFname && strlen(pidFname)>0)
     {
-        std::fstream pf(pidfile.c_str(), std::ios::in);
+        std::fstream pf(pidFname, std::ios::in);
         uint32_t pid = 0;
         pf >> pid;
-        if (kill(pid, SIGINT) < 0)
+        if (kill(pid, SIGKILL) < 0)
         {
-            std::cerr << "Unable to stop daemon" << std::endl;
+            std::cerr << "Unable to stop daemon:"<< pid << std::endl;
             exit(EXIT_FAILURE);
         }
         pf.close();
@@ -143,3 +161,45 @@ struct WatchDog
 };
 
 WatchDog dog;
+
+//typedef unsigned int uint32;
+
+/// create PID file
+//unsigned int CreatePIDFile(const std::string& filename)
+//{
+//    FILE* pid_file = fopen(filename.c_str(), "w");
+//    if (pid_file == nullptr)
+//        return 0;
+//
+//#ifdef WIN32
+//
+//    DWORD pid = GetCurrentProcessId();
+//#else
+//    pid_t pid = getpid();
+//    //pid_t pid = sid;
+//#endif
+//
+//    fprintf(pid_file, "%d\n", pid);
+//    fclose(pid_file);
+//
+//    return (unsigned int)pid;
+//}
+
+void create_pid_file(const char *path)
+{
+		 char buf[256];
+			int fd;
+
+		sprintf(buf,"%d\n",getpid());
+
+			fd = open(path, O_WRONLY|O_CREAT|O_TRUNC, 0644);
+				if (fd == -1)
+				{
+							printf("open(%s) failed\n", path);
+							exit(1);
+				}
+				write(fd, buf, strlen(buf));
+		close(fd);
+}
+
+

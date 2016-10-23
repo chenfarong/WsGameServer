@@ -16,9 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "Common.h"
-#include "Log.h"
+//#include "Common.h"
+//#include "Log.h"
 
-void startDaemon(uint32_t timeout = 10);
-void stopDaemon();
+#include <string>
+
+void startDaemon(const char* pidFname);
+void stopDaemon(const char* pidfname);
 void detachDaemon();
+
+
+
