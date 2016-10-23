@@ -151,9 +151,9 @@ int ServerStep()
 		// current state the buffer.  If there is data remaining in the
 		// buffer then set the Write set otherwise the Read set
 		for (i = 0; i < TotalSockets; i++)
-			if (SocketArray[i]->BytesRECV > SocketArray[i]->BytesSEND)
-				FD_SET(SocketArray[i]->Socket, &WriteSet);
-			else
+			//if (SocketArray[i]->BytesRECV > SocketArray[i]->BytesSEND)
+			//	FD_SET(SocketArray[i]->Socket, &WriteSet);
+			//else
 				FD_SET(SocketArray[i]->Socket, &ReadSet);
 
 		if ((Total = select(0, &ReadSet, &WriteSet, &ExceptSet, &TimeOut)) == SOCKET_ERROR)
